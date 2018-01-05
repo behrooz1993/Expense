@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -46,7 +47,7 @@ func Login(context *gin.Context) {
 			return
 		}
 		if helpers.ComparePasswords(user.Password, []byte(context.PostForm(PARAM_PASSWORD))) {
-			user.JwtToken, _ = helpers.GenerateJwtToken(user.Cellphone, false)
+			user.JwtToken, _ = helpers.GenerateJwtToken(fmt.Sprint(user.ID), false)
 			generateJsonResponse(context, true, user, "")
 		} else {
 			generateJsonResponse(context, false, nil, "Password is not correct")
@@ -54,6 +55,14 @@ func Login(context *gin.Context) {
 	} else {
 		generateJsonResponse(context, false, nil, "Field error")
 	}
+}
+
+func TestJwt(context *gin.Context) {
+	cookie, err := context.Request.Cookie("userId")
+	if err != nil {
+		log.Print(err)
+	}
+	generateJsonResponse(context, true, cookie.Value, "")
 }
 
 func generateJsonResponse(context *gin.Context, status bool, data interface{}, err string) {
