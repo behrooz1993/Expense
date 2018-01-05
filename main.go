@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+
 	"gitlab.com/ExpenseApp/controllers"
 )
 
@@ -32,7 +33,7 @@ func main() {
 func initRoutes() {
 	v1 := router.Group("/v1")
 	{
+		v1.POST("/user/register", controllers.Register)
 		v1.POST("/user/login", controllers.Login)
 	}
-
 }
